@@ -13,6 +13,13 @@ import sys
 # args = parser.parse_args()
 # print(args.num)
 
+print(" _____       _ _       _         _ _    _____ _ _        _____              ")          
+print("|_   _|_ _ _|_| |_ ___| |_ ___ _| | |  |     | |_|___   |     |___ _____ ___ ") 
+print("  | | | | | | |  _|  _|   |___| . | |  |   --| | | . |  |   --| . |     | . |")
+print("  |_| |_____|_|_| |___|_|_|   |___|_|  |_____|_|_|  _|  |_____|___|_|_|_|  _|")
+print("                                                 |_|                    |_|  ")
+print("Made by Net_Code#4028")
+
 # writing out the varibles that are going to be used by twitch-dl to download the clips
 channel_name = (sys.argv[1]) + " "
 output_file_name = (sys.argv[1]) + "_WeeklyCompilation.mp4"
@@ -23,11 +30,15 @@ clips = "clips "
 # create a string named cmd that is the entire twitch-dl command that is going to be used
 cmd = "twitch-dl " + clips + channel_name + timePeriod + number_to_download + download
 
+def clean_file_names():
+    os.rename(src, dst)
+
+
 # the function to use the cmd string to download the clips
 def download_clips():
     os.system(cmd)
 
-# this lists the .mp4 files it finds in the dir its in, so the downloaded clips.  And adds their names the a file to reference later as well as keeping track of the number of lines in the file.  It then references the folder to find what each file is named and loops through that until it hits the number of lines (determined from the prior for loop).  At which point it edits each clip to change the timescale so all of the clips have the same timescale, which makes them concat correctly.  It also outputs the fixed clips in a new folder called "fixed_clips"
+# this lists the .mp4 files it finds in the dir its in, so the downloaded clips.  And adds their names to a file to reference later as well as keeping track of the number of lines in the file.  It then references the file to find what each clip is named and loops through that until it hits the number of lines (determined from the prior "for" loop).  At which point it edits each clip to change the timescale so all of the clips have the same timescale, which makes them concat correctly.  It also outputs the fixed clips in a new folder called "fixed_clips"
 def list_files():
     dir = '.'
     files_list = glob.glob(os.path.join(dir, '*.mp4'))
@@ -39,6 +50,11 @@ def list_files():
         print(number_of_lines)
     with open("file_list1.txt","a") as o:
         o.write(files_string)
+    # s = ""
+    # s = s.encode('ascii', errors='ignore')
+    # s = s.decode()
+    # os.rename(files_string, s)
+
 
     os.system("mkdir fixed_clips")
     fixed_output_file_name_number = 0
