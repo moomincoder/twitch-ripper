@@ -30,13 +30,14 @@ clips = "clips "
 # create a string named cmd that is the entire twitch-dl command that is going to be used
 cmd = "twitch-dl " + clips + channel_name + timePeriod + number_to_download + download
 
-def clean_file_names():
-    os.rename(src, dst)
+# def clean_file_names():
+#     os.rename(src, dst)
 
 
 # the function to use the cmd string to download the clips
 def download_clips():
     os.system(cmd)
+    # it takes 4 min to download the videos
 
 # this lists the .mp4 files it finds in the dir its in, so the downloaded clips.  And adds their names to a file to reference later as well as keeping track of the number of lines in the file.  It then references the file to find what each clip is named and loops through that until it hits the number of lines (determined from the prior "for" loop).  At which point it edits each clip to change the timescale so all of the clips have the same timescale, which makes them concat correctly.  It also outputs the fixed clips in a new folder called "fixed_clips"
 def list_files():
@@ -47,14 +48,9 @@ def list_files():
     for i in files_list:
         files_string=files_string+i+"\n"
         number_of_lines = number_of_lines + 1
-        print(number_of_lines)
+        # print(number_of_lines)
     with open("file_list1.txt","a") as o:
         o.write(files_string)
-    # s = ""
-    # s = s.encode('ascii', errors='ignore')
-    # s = s.decode()
-    # os.rename(files_string, s)
-
 
     os.system("mkdir fixed_clips")
     fixed_output_file_name_number = 0
@@ -64,14 +60,16 @@ def list_files():
     for i in files_list:    # the reason for all of this garbage is becasue the ffmpeg arg -video_track_timescale does not support inputs from a file, so this writes each files name to a list and then pull from the list
         f = open("file_list1.txt", "r")
         linelist = f.readlines()
-        # lineNum = lineNum + 1
         input_file = linelist[lineNum].rstrip('\n')
         lineNum = lineNum + 1
         increment = increment + 1   # the purpose of this piece of garbage is to make sure that each fixed clip has a unique name by adding onto the end with an incrementing int which is then converted into a string and used
         new_fixed_filename = fixed_output_file_name_number + increment
         fixed_output_file_name = fixed_output_file_name + str(new_fixed_filename)
-        os.system("ffmpeg -fflags +igndts -i " + input_file + " -video_track_timescale 90000 " + "fixed_clips\\" + fixed_output_file_name + ".mp4")
+        os.system("ffmpeg -loglevel 8 -fflags +igndts -i " + input_file + " -video_track_timescale 90000 " + "fixed_clips\\" + fixed_output_file_name + ".mp4")
+        print("fixed a file")
     f.close()
+    print("Finished changing video timescale" + "\n")
+    # it takes X time to fix the downloaded clips
 # this finds each .mp4 file in the "fixed_clips" dir and write their names out to a new file 
 def list_files2():
     dir = '.\\fixed_clips\\'
@@ -85,6 +83,8 @@ def list_files2():
 # this takes all of the files listed in file_list2.txt and concats them
 def concat_files():
     os.system("ffmpeg -f concat -safe 0 -i file_list2.txt " + output_file_name)
+    print("Finished creating the compilation")
+    # it takes X time to create the final video
 # THIS MAKES EVERYTHING WORK PERFECTLY
 # ffmpeg -i input1.mp4 -video_track_timescale 90000 fixed1.mp4 
 
@@ -96,9 +96,10 @@ def clean_up():
     os.system("del file_list2.txt")
     os.system("del fixed_clips\\*.mp4")
     os.system("rmdir fixed_clips")
+    print("Finished cleaning up")
 
 # call the functions to download the clips, list them, concat them, and clean up
-download_clips() 
+# download_clips() 
 list_files()
 list_files2()
 concat_files()
