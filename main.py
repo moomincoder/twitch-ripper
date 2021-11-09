@@ -2,6 +2,8 @@ import os
 import glob
 import argparse
 import sys
+from colorama import init, Fore, Back, Style
+init()
 
 # todo
 # add in arguments that take advantage of argparse
@@ -13,7 +15,7 @@ args = parser.parse_args()
 # print(args.number_of_clips)
 # print(args.channel_name)
 
-print(" _____       _ _       _         _ _    _____ _ _        _____              ")          
+print(Fore.CYAN + " _____       _ _       _         _ _    _____ _ _        _____              ")          
 print("|_   _|_ _ _|_| |_ ___| |_ ___ _| | |  |     | |_|___   |     |___ _____ ___ ") 
 print("  | | | | | | |  _|  _|   |___| . | |  |   --| | | . |  |   --| . |     | . |")
 print("  |_| |_____|_|_| |___|_|_|   |___|_|  |_____|_|_|  _|  |_____|___|_|_|_|  _|")
@@ -29,10 +31,6 @@ timePeriod = "--period last_week "
 clips = "clips "
 # create a string named cmd that is the entire twitch-dl command that is going to be used
 cmd = "twitch-dl " + clips + channel_name + timePeriod + number_to_download + download
-
-# def clean_file_names():
-#     os.rename(src, dst)
-
 
 # the function to use the cmd string to download the clips
 def download_clips():
@@ -69,7 +67,7 @@ def list_files():
         print("fixed a file")
     f.close()
     print("Finished changing video timescale" + "\n")
-    # it takes X time to fix the downloaded clips
+    # it takes 2:30 min to fix the downloaded clips
 # this finds each .mp4 file in the "fixed_clips" dir and write their names out to a new file 
 def list_files2():
     dir = '.\\fixed_clips\\'
@@ -84,7 +82,7 @@ def list_files2():
 def concat_files():
     os.system("ffmpeg -loglevel 8 -f concat -safe 0 -i file_list2.txt " + output_file_name)
     print("Finished creating the compilation")
-    # it takes X time to create the final video
+    # it takes 2 min to create the final video
 # THIS MAKES EVERYTHING WORK PERFECTLY
 # ffmpeg -i input1.mp4 -video_track_timescale 90000 fixed1.mp4 
 
@@ -99,7 +97,7 @@ def clean_up():
     print("Finished cleaning up")
 
 # call the functions to download the clips, list them, concat them, and clean up
-# download_clips() 
+download_clips() 
 list_files()
 list_files2()
 concat_files()
