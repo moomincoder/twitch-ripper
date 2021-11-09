@@ -82,7 +82,7 @@ def list_files2():
 
 # this takes all of the files listed in file_list2.txt and concats them
 def concat_files():
-    os.system("ffmpeg -f concat -safe 0 -i file_list2.txt " + output_file_name)
+    os.system("ffmpeg -loglevel 8 -f concat -safe 0 -i file_list2.txt " + output_file_name)
     print("Finished creating the compilation")
     # it takes X time to create the final video
 # THIS MAKES EVERYTHING WORK PERFECTLY
