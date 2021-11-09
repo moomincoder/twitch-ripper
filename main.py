@@ -25,7 +25,7 @@ print(Fore.CYAN + "|_   _|_ _ _|_| |_ ___| |_ ___ _| | |  |     | |_|___   |    
 print(Fore.CYAN + "  | | | | | | |  _|  _|   |___| . | |  |   --| | | . |  |   --| . |     | . |")
 print(Fore.CYAN + "  |_| |_____|_|_| |___|_|_|   |___|_|  |_____|_|_|  _|  |_____|___|_|_|_|  _|")
 print(Fore.CYAN + "                                                 |_|                    |_|  ")
-print(Fore.CYAN + "Made by Net_Code#4028")
+print(Fore.CYAN + "Made by Net_Code#4028" +"\n")
 
 # writing out the varibles that are going to be used by twitch-dl to download the clips
 channel_name = (args.channel_name) + " "
