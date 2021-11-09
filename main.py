@@ -6,12 +6,12 @@ import sys
 # todo
 # add in arguments that take advantage of argparse
 # handle weird characters, right now if it finds some weird chars in a file name it all crashes
-
-# parser = argparse.ArgumentParser()
-# parser.add_argument("-num", help="Enter the number of clips you want to download")
-# parser.add_argument("-num", help="None of this works as far as I can tell, but what does work is using the command \"py main.py (the channel you want to download from) (the number of files)\"")
-# args = parser.parse_args()
-# print(args.num)
+parser = argparse.ArgumentParser()
+parser.add_argument("channel_name", help="The name of channel that you want to make a comp of")
+parser.add_argument("number_of_clips", help="The number of clips you want to download from that channel")
+args = parser.parse_args()
+# print(args.number_of_clips)
+# print(args.channel_name)
 
 print(" _____       _ _       _         _ _    _____ _ _        _____              ")          
 print("|_   _|_ _ _|_| |_ ___| |_ ___ _| | |  |     | |_|___   |     |___ _____ ___ ") 
@@ -21,10 +21,10 @@ print("                                                 |_|                    |
 print("Made by Net_Code#4028")
 
 # writing out the varibles that are going to be used by twitch-dl to download the clips
-channel_name = (sys.argv[1]) + " "
-output_file_name = (sys.argv[1]) + "_WeeklyCompilation.mp4"
+channel_name = (args.channel_name) + " "
+output_file_name = (args.channel_name) + "_WeeklyCompilation.mp4"
 download = "--download "
-number_to_download = "--limit " + (sys.argv[2]) + " "
+number_to_download = "--limit " + (args.number_of_clips) + " "
 timePeriod = "--period last_week "
 clips = "clips "
 # create a string named cmd that is the entire twitch-dl command that is going to be used
