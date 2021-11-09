@@ -3,6 +3,11 @@ import glob
 import argparse
 import sys
 from colorama import init, Fore, Back, Style
+from itertools import cycle
+import time
+import threading
+from halo import Halo
+
 init()
 
 # todo
@@ -16,11 +21,11 @@ args = parser.parse_args()
 # print(args.channel_name)
 
 print(Fore.CYAN + " _____       _ _       _         _ _    _____ _ _        _____              ")          
-print("|_   _|_ _ _|_| |_ ___| |_ ___ _| | |  |     | |_|___   |     |___ _____ ___ ") 
-print("  | | | | | | |  _|  _|   |___| . | |  |   --| | | . |  |   --| . |     | . |")
-print("  |_| |_____|_|_| |___|_|_|   |___|_|  |_____|_|_|  _|  |_____|___|_|_|_|  _|")
-print("                                                 |_|                    |_|  ")
-print("Made by Net_Code#4028")
+print(Fore.CYAN + "|_   _|_ _ _|_| |_ ___| |_ ___ _| | |  |     | |_|___   |     |___ _____ ___ ") 
+print(Fore.CYAN + "  | | | | | | |  _|  _|   |___| . | |  |   --| | | . |  |   --| . |     | . |")
+print(Fore.CYAN + "  |_| |_____|_|_| |___|_|_|   |___|_|  |_____|_|_|  _|  |_____|___|_|_|_|  _|")
+print(Fore.CYAN + "                                                 |_|                    |_|  ")
+print(Fore.CYAN + "Made by Net_Code#4028")
 
 # writing out the varibles that are going to be used by twitch-dl to download the clips
 channel_name = (args.channel_name) + " "
@@ -56,6 +61,8 @@ def list_files():
     lineNum = 0
     increment = 0
     for i in files_list:    # the reason for all of this garbage is becasue the ffmpeg arg -video_track_timescale does not support inputs from a file, so this writes each files name to a list and then pull from the list
+        spinner = Halo(text='Fixing files', spinner='dots2')
+        spinner.start()
         f = open("file_list1.txt", "r")
         linelist = f.readlines()
         input_file = linelist[lineNum].rstrip('\n')
@@ -64,7 +71,7 @@ def list_files():
         new_fixed_filename = fixed_output_file_name_number + increment
         fixed_output_file_name = fixed_output_file_name + str(new_fixed_filename)
         os.system("ffmpeg -loglevel 8 -fflags +igndts -i " + input_file + " -video_track_timescale 90000 " + "fixed_clips\\" + fixed_output_file_name + ".mp4")
-        print("fixed a file")
+        spinner.stop()
     f.close()
     print("Finished changing video timescale" + "\n")
     # it takes 2:30 min to fix the downloaded clips
@@ -80,8 +87,11 @@ def list_files2():
 
 # this takes all of the files listed in file_list2.txt and concats them
 def concat_files():
+    spinner = Halo(text='Creating the final output', spinner='dots2')
+    spinner.start()
     os.system("ffmpeg -loglevel 8 -f concat -safe 0 -i file_list2.txt " + output_file_name)
     print("Finished creating the compilation")
+    spinner.stop()
     # it takes 2 min to create the final video
 # THIS MAKES EVERYTHING WORK PERFECTLY
 # ffmpeg -i input1.mp4 -video_track_timescale 90000 fixed1.mp4 
