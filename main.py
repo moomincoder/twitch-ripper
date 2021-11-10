@@ -7,7 +7,6 @@ from itertools import cycle
 import time
 import threading
 from halo import Halo
-
 init()
 
 # todo
@@ -16,11 +15,13 @@ init()
 parser = argparse.ArgumentParser()
 parser.add_argument("channel_name", help="The name of channel that you want to make a comp of")
 parser.add_argument("number_of_clips", help="The number of clips you want to download from that channel")
+# parser.add_argument("username", help="Your youtube username that you want to use")
+# parser.add_argument("password", help="The password for the account that you want to use")
 args = parser.parse_args()
 # print(args.number_of_clips)
 # print(args.channel_name)
 
-print(Fore.CYAN + " _____       _ _       _         _ _    _____ _ _        _____              ")          
+print(Fore.CYAN + " _____       _ _       _         _ _    _____ _ _        _____               ")          
 print(Fore.CYAN + "|_   _|_ _ _|_| |_ ___| |_ ___ _| | |  |     | |_|___   |     |___ _____ ___ ") 
 print(Fore.CYAN + "  | | | | | | |  _|  _|   |___| . | |  |   --| | | . |  |   --| . |     | . |")
 print(Fore.CYAN + "  |_| |_____|_|_| |___|_|_|   |___|_|  |_____|_|_|  _|  |_____|___|_|_|_|  _|")
@@ -37,10 +38,14 @@ clips = "clips "
 # create a string named cmd that is the entire twitch-dl command that is going to be used
 cmd = "twitch-dl " + clips + channel_name + timePeriod + number_to_download + download
 
+video_title = (args.channel_name)+" Weekly Clips Compilation"
+video_path = output_file_name
+
+
 # the function to use the cmd string to download the clips
 def download_clips():
     os.system(cmd)
-    # it takes 4 min to download the videos
+    # it takes about 4 min to download the videos
 
 # this lists the .mp4 files it finds in the dir its in, so the downloaded clips.  And adds their names to a file to reference later as well as keeping track of the number of lines in the file.  It then references the file to find what each clip is named and loops through that until it hits the number of lines (determined from the prior "for" loop).  At which point it edits each clip to change the timescale so all of the clips have the same timescale, which makes them concat correctly.  It also outputs the fixed clips in a new folder called "fixed_clips"
 def list_files():
@@ -74,7 +79,7 @@ def list_files():
         spinner.stop()
     f.close()
     print("Finished changing video timescale" + "\n")
-    # it takes 2:30 min to fix the downloaded clips
+    # it takes about 2:30 min to fix the downloaded clips
 # this finds each .mp4 file in the "fixed_clips" dir and write their names out to a new file 
 def list_files2():
     dir = '.\\fixed_clips\\'
@@ -84,6 +89,8 @@ def list_files2():
         files_string=files_string+"file \'"+i+"\'"+"\n"
     with open("file_list2.txt","a") as o:
         o.write(files_string)
+def makeOutputFileName():
+    output_file_name = (args.channel_name) + "_WeeklyCompilation.mp4"
 
 # this takes all of the files listed in file_list2.txt and concats them
 def concat_files():
@@ -92,13 +99,13 @@ def concat_files():
     os.system("ffmpeg -loglevel 8 -f concat -safe 0 -i file_list2.txt " + output_file_name)
     print("Finished creating the compilation")
     spinner.stop()
-    # it takes 2 min to create the final video
+    # it takes about 2 min to create the final video
 # THIS MAKES EVERYTHING WORK PERFECTLY
 # ffmpeg -i input1.mp4 -video_track_timescale 90000 fixed1.mp4 
 
 # clean up the folder so that you are just left with a folder named "final" and nothing is left over to mess up the next run
 def clean_up():
-    os.system("move " + output_file_name + " .\\final")
+    os.system("move " + output_file_name + " .\\Upload")
     os.system("del *.mp4")
     os.system("del file_list1.txt")
     os.system("del file_list2.txt")
