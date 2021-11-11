@@ -21,7 +21,7 @@ args = parser.parse_args()
 # print(args.number_of_clips)
 # print(args.channel_name)
 
-print(Fore.CYAN + " _____       _ _       _         _ _    _____ _ _        _____               ")          
+print(Fore.CYAN + " _____       _ _       _         _ _    _____ _ _        _____               ")
 print(Fore.CYAN + "|_   _|_ _ _|_| |_ ___| |_ ___ _| | |  |     | |_|___   |     |___ _____ ___ ") 
 print(Fore.CYAN + "  | | | | | | |  _|  _|   |___| . | |  |   --| | | . |  |   --| . |     | . |")
 print(Fore.CYAN + "  |_| |_____|_|_| |___|_|_|   |___|_|  |_____|_|_|  _|  |_____|___|_|_|_|  _|")
@@ -45,7 +45,7 @@ video_path = output_file_name
 # the function to use the cmd string to download the clips
 def download_clips():
     os.system(cmd)
-    # it takes about 4 min to download the videos
+    # it takes about 4 min to download 8 clips at I think 1080
 
 # this lists the .mp4 files it finds in the dir its in, so the downloaded clips.  And adds their names to a file to reference later as well as keeping track of the number of lines in the file.  It then references the file to find what each clip is named and loops through that until it hits the number of lines (determined from the prior "for" loop).  At which point it edits each clip to change the timescale so all of the clips have the same timescale, which makes them concat correctly.  It also outputs the fixed clips in a new folder called "fixed_clips"
 def list_files():
@@ -65,7 +65,7 @@ def list_files():
     fixed_output_file_name = "fixed_clip_"
     lineNum = 0
     increment = 0
-    for i in files_list:    # the reason for all of this garbage is becasue the ffmpeg arg -video_track_timescale does not support inputs from a file, so this writes each files name to a list and then pull from the list
+    for i in files_list:    # the reason for all of this garbage is becasue the ffmpeg arg -video_track_timescale does not support inputs from a file, so this writes each files name to a list and then pulls from the list
         spinner = Halo(text='Fixing files', spinner='dots2')
         spinner.start()
         f = open("file_list1.txt", "r")
@@ -80,7 +80,7 @@ def list_files():
     f.close()
     print("Finished changing video timescale" + "\n")
     # it takes about 2:30 min to fix the downloaded clips
-# this finds each .mp4 file in the "fixed_clips" dir and write their names out to a new file 
+# this finds each .mp4 file in the "fixed_clips" dir and writes their names out to a new file 
 def list_files2():
     dir = '.\\fixed_clips\\'
     files_list = glob.glob(os.path.join(dir, '*.mp4'))
@@ -105,13 +105,18 @@ def concat_files():
 
 # clean up the folder so that you are just left with a folder named "final" and nothing is left over to mess up the next run
 def clean_up():
+    os.system("del Upload\\*.mp4")
     os.system("move " + output_file_name + " .\\Upload")
     os.system("del *.mp4")
     os.system("del file_list1.txt")
     os.system("del file_list2.txt")
     os.system("del fixed_clips\\*.mp4")
     os.system("rmdir fixed_clips")
-    print("Finished cleaning up")
+    print(Fore.CYAN + "Finished cleaning up")
+
+def upload_video():
+    video_upload_cmd = "py video_upload.py"
+    os.system(video_upload_cmd)
 
 # call the functions to download the clips, list them, concat them, and clean up
 download_clips() 
@@ -119,3 +124,4 @@ list_files()
 list_files2()
 concat_files()
 clean_up()
+upload_video()

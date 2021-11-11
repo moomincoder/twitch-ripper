@@ -50,7 +50,7 @@ def get_authenticated_service(): # Modified
     store = Storage(credential_path)
     credentials = store.get()
     if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets("client_secret_file.json", SCOPES)
+        flow = client.flow_from_clientsecrets(".json", SCOPES)
         credentials = tools.run_flow(flow, store)
     return build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
 

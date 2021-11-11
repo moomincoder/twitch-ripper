@@ -1,12 +1,11 @@
 import os
-import main
 from googleapiclient.http import MediaFileUpload
 
 class Video:
     description = "test description"
-    category = "22"
+    category = "20"
     keywords = "test"
-    privacyStatus = "private"
+    privacyStatus = "public"
 
     # makeOutputFileName()
 
