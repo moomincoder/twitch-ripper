@@ -1,0 +1,2 @@
+# todo
+# handle weird characters in the clip names, right now if it finds some weird chars in a file name it all crashes.

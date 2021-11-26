@@ -50,19 +50,24 @@ def get_authenticated_service(): # Modified
     store = Storage(credential_path)
     credentials = store.get()
     if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(".json", SCOPES)
+        flow = client.flow_from_clientsecrets("client_secret_348007490929-tq75j6qr4rm6bgcavcnc8k4jasd0bv9i.apps.googleusercontent.com.json", SCOPES)
         credentials = tools.run_flow(flow, store)
     return build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
 
 def initialize_upload(youtube, options):
+  file = open("video_info.txt","r")
+  title_from_file = file.readline()
+  description_from_file = file.readline()
+  file.close()
   tags = None
   if options.keywords:
     tags = options.keywords.split(',')
-
   body=dict(
     snippet=dict(
-      title=options.getFileName("video").split(".", 1)[0],
-      description=options.description,
+      # title=options.getFileName("video").split(".", 1)[0],
+      title=title_from_file,
+      # description=options.description,
+      description=description_from_file,
       tags=tags,
       categoryId=options.category
     ),

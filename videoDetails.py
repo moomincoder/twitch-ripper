@@ -4,8 +4,8 @@ from googleapiclient.http import MediaFileUpload
 class Video:
     description = "test description"
     category = "20"
-    keywords = "test"
-    privacyStatus = "public"
+    keywords = "vtubers"
+    privacyStatus = "private"
 
     # makeOutputFileName()
 
