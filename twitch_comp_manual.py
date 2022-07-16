@@ -11,15 +11,6 @@ init()
 
 # todo
 # handle weird characters, right now if it finds some weird chars in a file name it all crashes
-parser = argparse.ArgumentParser()
-parser.add_argument("channel_name", help="The name of channel that you want to make a comp of")
-parser.add_argument("number_of_clips", help="The number of clips you want to download from that channel")
-parser.add_argument("time_frame", help="last_day, week, month, all_time")
-# parser.add_argument("username", help="Your youtube username that you want to use")
-# parser.add_argument("password", help="The password for the account that you want to use")
-args = parser.parse_args()
-# print(args.number_of_clips)
-# print(args.channel_name)
 
 print(Fore.CYAN + " _____       _ _       _         _ _    _____ _ _        _____               ")
 print(Fore.CYAN + "|_   _|_ _ _|_| |_ ___| |_ ___ _| | |  |     | |_|___   |     |___ _____ ___ ") 
@@ -27,36 +18,20 @@ print(Fore.CYAN + "  | | | | | | |  _|  _|   |___| . | |  |   --| | | . |  |   -
 print(Fore.CYAN + "  |_| |_____|_|_| |___|_|_|   |___|_|  |_____|_|_|  _|  |_____|___|_|_|_|  _|")
 print(Fore.CYAN + "                                                 |_|                    |_|  ")
 print(Fore.CYAN + "Made by Net_Code#4028" +"\n")
-# last_day,last_week,last_month,all_time
-time_frame_parsed = args.time_frame
-if(time_frame_parsed=="last_day"):
-    time_frame_parsed = "last_day"
-elif(time_frame_parsed=="week"):
-    time_frame_parsed = "last_week"
-elif(time_frame_parsed=="month"):
-    time_frame_parsed = "last_month"
-elif(time_frame_parsed=="all_time"):
-    time_frame_parsed = "all_time"
-else:
-    print("Invalid time frame")
+print(Fore.CYAN + "This is the manual version where you give it a file with slugs for each clip")
 
 # writing out the varibles that are going to be used by twitch-dl to download the clips
-channel_name = (args.channel_name) + " "
-output_file_name = (args.channel_name) + "_WeeklyCompilation.mp4"
-download = "--download "
-number_to_download = "--limit " + (args.number_of_clips) + " "
-timePeriod = "--period " + time_frame_parsed + " "
-clips = "clips "
+output_file_name = "Final_Compilation.mp4"
+download = "download "
+quality = "-q source "
 # create a string named cmd that is the entire twitch-dl command that is going to be used
-cmd = "twitch-dl " + clips + channel_name + timePeriod + number_to_download + download
-
-video_title = (args.channel_name)+" Weekly Clips Compilation"
+cmd = "twitch-dl " + download + quality
 video_path = output_file_name
 
 
 # the function to use the cmd string to download the clips
-def download_clips():
-    os.system(cmd)
+def download_clips(input_slug):
+    os.system(cmd + input_slug)
 
 # this lists the .mp4 files it finds in the dir its in, so the downloaded clips.  
 # And adds their names to a file to reference later as well as keeping track of the number of lines in the file.  
@@ -90,7 +65,7 @@ def list_files():
         increment = increment + 1   # the purpose of this piece of garbage is to make sure that each fixed clip has a unique name by adding onto the end with an incrementing int which is then converted into a string and used
         new_fixed_filename = fixed_output_file_name_number + increment
         fixed_output_file_name = fixed_output_file_name + str(new_fixed_filename)
-        os.system("ffmpeg -loglevel 8 -fflags +igndts -i " + input_file + " -video_track_timescale 90000 " + "fixed_clips\\" + fixed_output_file_name + ".mp4")
+        os.system("ffmpeg -hwaccel cuda -loglevel 8 -fflags +igndts -i " + input_file + " -video_track_timescale 90000 " + "fixed_clips\\" + fixed_output_file_name + ".mp4")
         spinner.stop()
     f.close()
     print("Finished changing video timescale" + "\n")
@@ -103,23 +78,21 @@ def list_files2():
         files_string=files_string+"file \'"+i+"\'"+"\n"
     with open("file_list2.txt","a") as o:
         o.write(files_string)
-def makeOutputFileName():
-    output_file_name = (args.channel_name) + "_WeeklyCompilation.mp4"
 
 # this takes all of the files listed in file_list2.txt and concats them
 def concat_files():
     spinner = Halo(text='Creating the final output', spinner='dots2')
     spinner.start()
-    os.system("ffmpeg -loglevel 8 -f concat -safe 0 -i file_list2.txt " + output_file_name)
+    os.system("ffmpeg -hwaccel cuda -loglevel 8 -f concat -safe 0 -i file_list2.txt " + output_file_name)
     print("Finished creating the compilation")
     spinner.stop()
-    # it takes about 2 min to create the final video
+
 # THIS MAKES EVERYTHING WORK PERFECTLY
 # ffmpeg -i input1.mp4 -video_track_timescale 90000 fixed1.mp4 
 
 # clean up the folder so that you are just left with a folder named "final" and nothing is left over to mess up the next run
 def clean_up():
-    os.system("move " + output_file_name + " .\\Upload")
+    os.system("move " + output_file_name + " .\\upload\\")
     os.system("del *.mp4")
     os.system("del file_list1.txt")
     os.system("del file_list2.txt")
@@ -127,15 +100,22 @@ def clean_up():
     os.system("rmdir fixed_clips")
     print(Fore.CYAN + "Finished cleaning up")
 
-def upload_video():
-    video_upload_cmd = "py video_upload.py"
-    os.system(video_upload_cmd)
+
 
 # call the functions to download the clips, list them, concat them, and clean up
 clean_up()
-download_clips() 
+# download_clips() 
+
+f = open("slugs.txt", "r")
+linelist = f.readlines()
+# input_file = linelist.rstrip('\n')
+input_file = linelist
+for line in input_file:
+    download_clips(line)
+f.close()
+os.system("mkdir upload\\")
 list_files()
 list_files2()
 concat_files()
-# clean_up()
+clean_up()
 # upload_video()
